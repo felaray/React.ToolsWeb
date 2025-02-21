@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from 'react';
 import { Layout, Search, ArrowLeft, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,20 +14,17 @@ const useRouter = () => {
 };
 
 // 工具詳細頁面組件
-interface ToolDetailProps {
-  tool: {
-    id: string;
-    title: string;
-    description: string;
-    icon: string;
-    category: string;
-    features?: string[];
-    component: React.ReactNode;
-  } | null;
-  onBack: () => void;
+interface Tool {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  category: string;
+  features?: string[];
+  component: React.ReactNode;
 }
 
-const ToolDetail: React.FC<ToolDetailProps> = ({ tool, onBack }) => {
+const ToolDetail = ({ tool, onBack }: { tool: Tool | null, onBack: () => void }) => {
   if (!tool) return null;
 
   return (
@@ -209,7 +205,7 @@ const ToolDashboard = () => {
         {filteredTools.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500">
-              找不到符合 {searchTerm} 的工具
+              找不到符合 &quot;{searchTerm}&quot; 的工具
             </p>
           </div>
         )}
