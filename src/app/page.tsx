@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Layout, Search, ArrowLeft, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import firebaselogin from "@/components/tools/firebase-login";
 
 // 模擬 React Router 的行為
 const useRouter = () => {
@@ -21,7 +22,7 @@ interface Tool {
   icon: string;
   category: string;
   features?: string[];
-  component: React.ReactNode;
+  component: React.ReactNode | (() => React.JSX.Element);
 }
 
 const ToolDetail = ({ tool, onBack }: { tool: Tool | null, onBack: () => void }) => {
@@ -61,7 +62,7 @@ const ToolDetail = ({ tool, onBack }: { tool: Tool | null, onBack: () => void })
           <div>
             <h2 className="text-lg font-semibold mb-2">使用方式</h2>
             <div className="bg-gray-50 p-6 rounded-lg">
-              {tool.component}
+              {typeof tool.component === 'function' ? tool.component() : tool.component}
             </div>
           </div>
         </div>
@@ -114,6 +115,19 @@ const ToolDashboard = () => {
       component: <div className="text-center">Base64 轉換工具介面</div>
     },
     // ... 其他工具
+    {
+      id: "firebase-login",
+      title: "Firebase 登入",
+      description: "透過 Firebase 進行使用者驗證",
+      icon: "🔑",
+      category: "安全工具",
+      features: [
+        "Google 登入",
+        "Email 密碼登入",
+        "驗證狀態管理"
+      ],
+      component: firebaselogin
+    }
   ];
 
   // 獲取當前顯示的工具
