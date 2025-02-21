@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Layout, Search, ArrowLeft, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import firebaselogin from "@/components/tools/firebase-login";
+import AppleJWSGenerator from '@/components/tools/apple-jwt-maker';
 
 // 模擬 React Router 的行為
 const useRouter = () => {
@@ -131,6 +132,21 @@ const ToolDashboard = () => {
       component: firebaselogin,
       hidden: false,  
     },
+    {
+      id: "jwt-generator",
+      title: "Apple JWS 產生器",
+      description: "產生並簽署 JSON Web Signature (JWS), 用於 Apple Server-to-Server Notifications",
+      icon: "📝",
+      category: "安全工具",
+      features: [
+        "支援 PEM 檔案匯入",
+        "支持 ECDSA 签名",
+        "自動生成 JWS"
+      ],
+      component: <AppleJWSGenerator />,  // 這裡是你之前的 `AppleJWSGenerator` 组件
+      hidden: false,
+    }
+    
   ];
 
   // 獲取當前顯示的工具
