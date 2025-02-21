@@ -23,6 +23,7 @@ interface Tool {
   category: string;
   features?: string[];
   component: React.ReactNode | (() => React.JSX.Element);
+  hidden?: boolean;  // 新增隱藏屬性
 }
 
 const ToolDetail = ({ tool, onBack }: { tool: Tool | null, onBack: () => void }) => {
@@ -85,7 +86,7 @@ const ToolDashboard = () => {
     "實用工具"
   ];
 
-  const tools = [
+  const tools: Tool[] = [
     {
       id: "json-formatter",
       title: "JSON 格式化",
@@ -98,7 +99,8 @@ const ToolDashboard = () => {
         "支援縮排調整",
         "支援複製格式化後的程式碼"
       ],
-      component: <div className="text-center">JSON 格式化工具介面</div>
+      component: <div className="text-center">JSON 格式化工具介面</div>,
+      hidden: true,  // 是否隱藏此工具
     },
     {
       id: "base64",
@@ -112,9 +114,9 @@ const ToolDashboard = () => {
         "支援檔案轉換",
         "支援批次處理"
       ],
-      component: <div className="text-center">Base64 轉換工具介面</div>
+      component: <div className="text-center">Base64 轉換工具介面</div>,
+      hidden: true,  // 是否隱藏此工具
     },
-    // ... 其他工具
     {
       id: "firebase-login",
       title: "Firebase 登入",
@@ -126,8 +128,9 @@ const ToolDashboard = () => {
         "Email 密碼登入",
         "驗證狀態管理"
       ],
-      component: firebaselogin
-    }
+      component: firebaselogin,
+      hidden: false,  
+    },
   ];
 
   // 獲取當前顯示的工具
@@ -138,8 +141,16 @@ const ToolDashboard = () => {
     const matchesSearch = tool.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          tool.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "全部" || tool.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const isVisible = !tool.hidden;  // 判斷工具是否隱藏
+    return matchesSearch && matchesCategory && isVisible;
   });
+
+  // 根據分類顯示工具
+  const filteredCategories = categories.filter(category => 
+    tools.some(tool => 
+      tool.category === category && !tool.hidden
+    )
+  );
 
   // 渲染主頁面或工具詳細頁面
   const renderContent = () => {
@@ -176,7 +187,7 @@ const ToolDashboard = () => {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
+            {filteredCategories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
