@@ -6,7 +6,7 @@ import CategoryFilter from './CategoryFilter';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { ToolDetail } from './ToolDetail';
-import { Tool } from './types'; // 定義 Tool 類型
+import { Tool } from './types';
 
 const ToolDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
