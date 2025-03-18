@@ -1,82 +1,13 @@
 "use client";
 import React, { useState } from 'react';
-import { Layout, Search, ArrowLeft, X } from 'lucide-react';
+import { Layout, Search, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import firebaselogin from "@/components/tools/firebase-login";
-import AppleJWSGenerator from '@/components/tools/apple-jwt-maker';
-
-// 模擬 React Router 的行為
-const useRouter = () => {
-  const [path, setPath] = useState('/');
-  return {
-    push: (newPath: string) => setPath(newPath),
-    pathname: path,
-    back: () => setPath('/'),
-  };
-};
-
-// 工具詳細頁面組件
-interface Tool {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  category: string;
-  features?: string[];
-  component: React.ReactNode | (() => React.JSX.Element);
-  hidden?: boolean;  // 新增隱藏屬性
-}
-
-const ToolDetail = ({ tool, onBack }: { tool: Tool | null, onBack: () => void }) => {
-  if (!tool) return null;
-
-  return (
-    <div className="container mx-auto px-6 py-8">
-      <button
-        onClick={onBack}
-        className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 mb-6"
-      >
-        <ArrowLeft className="h-5 w-5" />
-        <span>返回工具列表</span>
-      </button>
-
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <div className="flex items-center space-x-3 mb-6">
-          <span className="text-4xl">{tool.icon}</span>
-          <h1 className="text-2xl font-bold">{tool.title}</h1>
-        </div>
-
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-lg font-semibold mb-2">工具說明</h2>
-            <p className="text-gray-600">{tool.description}</p>
-          </div>
-
-          <div>
-            <h2 className="text-lg font-semibold mb-2">功能特點</h2>
-            <ul className="list-disc list-inside space-y-2 text-gray-600">
-              {tool.features?.map((feature, index) => (
-                <li key={index}>{feature}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h2 className="text-lg font-semibold mb-2">使用方式</h2>
-            <div className="bg-gray-50 p-6 rounded-lg">
-              {typeof tool.component === 'function' ? tool.component() : tool.component}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { useRouter } from 'next/navigation';
 
 const ToolDashboard = () => {
-  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("全部");
+  const router = useRouter();
 
   const categories = [
     "全部",
@@ -87,37 +18,7 @@ const ToolDashboard = () => {
     "實用工具"
   ];
 
-  const tools: Tool[] = [
-    {
-      id: "json-formatter",
-      title: "JSON 格式化",
-      description: "JSON 資料的格式化與驗證工具",
-      icon: "🔄",
-      category: "資料處理",
-      features: [
-        "自動格式化 JSON 字串",
-        "語法錯誤檢查",
-        "支援縮排調整",
-        "支援複製格式化後的程式碼"
-      ],
-      component: <div className="text-center">JSON 格式化工具介面</div>,
-      hidden: true,  // 是否隱藏此工具
-    },
-    {
-      id: "base64",
-      title: "Base64 轉換",
-      description: "文字與 Base64 編碼轉換",
-      icon: "🔐",
-      category: "安全工具",
-      features: [
-        "文字轉 Base64",
-        "Base64 轉文字",
-        "支援檔案轉換",
-        "支援批次處理"
-      ],
-      component: <div className="text-center">Base64 轉換工具介面</div>,
-      hidden: true,  // 是否隱藏此工具
-    },
+  const tools = [
     {
       id: "firebase-login",
       title: "Firebase 登入",
@@ -129,13 +30,12 @@ const ToolDashboard = () => {
         "Email 密碼登入",
         "驗證狀態管理"
       ],
-      component: firebaselogin,
-      hidden: false,  
+      hidden: false,
     },
     {
       id: "jwt-generator",
       title: "Apple JWS 產生器",
-      description: "產生並簽署 JSON Web Signature (JWS), 用於 Apple Server-to-Server Notifications",
+      description: "產生並簽署 JSON Web Signature (JWS)",
       icon: "📝",
       category: "安全工具",
       features: [
@@ -143,44 +43,44 @@ const ToolDashboard = () => {
         "支持 ECDSA 签名",
         "自動生成 JWS"
       ],
-      component: <AppleJWSGenerator />,  // 這裡是你之前的 `AppleJWSGenerator` 组件
+      hidden: false,
+    },
+    {
+      id: "alpha-vantage",
+      title: "Alpha Vantage API",
+      description: "使用 Alpha Vantage API 獲取股票數據",
+      icon: "💹",
+      category: "開發工具",
+      features: [
+        "獲取股票價格",
+        "獲取期權數據",
+        "即時市場資訊"
+      ],
       hidden: false,
     }
-    
   ];
-
-  // 獲取當前顯示的工具
-  const currentTool = tools.find(tool => `/tool/${tool.id}` === router.pathname);
 
   // 搜索和分類過濾
   const filteredTools = tools.filter(tool => {
     const matchesSearch = tool.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         tool.description.toLowerCase().includes(searchTerm.toLowerCase());
+      tool.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "全部" || tool.category === selectedCategory;
-    const isVisible = !tool.hidden;  // 判斷工具是否隱藏
+    const isVisible = !tool.hidden;
     return matchesSearch && matchesCategory && isVisible;
   });
 
-  // 根據分類顯示工具
-  const filteredCategories = categories.filter(category => 
-    tools.some(tool => 
-      tool.category === category && !tool.hidden
-    )
-  );
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white shadow-sm px-6 py-4 sticky top-0 z-10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Layout className="h-6 w-6" />
+            <span className="text-xl font-semibold">工具集合</span>
+          </div>
+        </div>
+      </nav>
 
-  // 渲染主頁面或工具詳細頁面
-  const renderContent = () => {
-    if (currentTool) {
-      return (
-        <ToolDetail
-          tool={currentTool}
-          onBack={() => router.back()}
-        />
-      );
-    }
-
-    return (
-      <>
+      <main className="container mx-auto px-6 py-8">
         {/* 搜索和過濾區 */}
         <div className="mb-8 space-y-4">
           <div className="relative">
@@ -203,7 +103,7 @@ const ToolDashboard = () => {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {filteredCategories.map((category) => (
+            {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
@@ -222,7 +122,7 @@ const ToolDashboard = () => {
         {/* 工具網格 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTools.map((tool) => (
-            <Card 
+            <Card
               key={tool.id}
               className="hover:shadow-lg transition-all duration-200 cursor-pointer transform hover:-translate-y-1"
               onClick={() => router.push(`/tool/${tool.id}`)}
@@ -242,46 +142,7 @@ const ToolDashboard = () => {
             </Card>
           ))}
         </div>
-
-        {filteredTools.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500">
-              找不到符合 &quot;{searchTerm}&quot; 的工具
-            </p>
-          </div>
-        )}
-      </>
-    );
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* 頂部導航欄 */}
-      <nav className="bg-white shadow-sm px-6 py-4 sticky top-0 z-10">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Layout className="h-6 w-6" />
-            <span 
-              className="text-xl font-semibold cursor-pointer"
-              onClick={() => router.push('/')}
-            >
-              工具集合
-            </span>
-          </div>
-        </div>
-      </nav>
-
-      {/* 主要內容區 */}
-      <main className="container mx-auto px-6 py-8">
-        {renderContent()}
       </main>
-
-      {/* 頁尾 */}
-      <footer className="bg-white border-t mt-12 py-6">
-        <div className="container mx-auto px-6 text-center text-gray-600">
-          © 2025 工具集合網站
-        </div>
-      </footer>
     </div>
   );
 };

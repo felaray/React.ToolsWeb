@@ -5,8 +5,8 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Next.js Application",
-  description: "Generated with shadcn/ui",
+  title: "工具集合 | Next.js Application",
+  description: "各種實用工具集合",
 }
 
 export default function RootLayout({
@@ -15,9 +15,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="zh-TW" suppressHydrationWarning>
       <head />
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+      </body>
     </html>
   )
 }
