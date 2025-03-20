@@ -6,7 +6,7 @@ export const tools: Tool[] = [
     title: "Firebase 登入",
     description: "透過 Firebase 進行使用者驗證",
     icon: "🔑",
-    category: "安全工具",
+    category: "開發工具",
     features: [
       "Google 登入",
       "Email 密碼登入",
@@ -19,7 +19,7 @@ export const tools: Tool[] = [
     title: "Apple JWS 產生器",
     description: "產生並簽署 JSON Web Signature (JWS)",
     icon: "📝",
-    category: "安全工具",
+    category: "開發工具",
     features: [
       "支援 PEM 檔案匯入",
       "支持 ECDSA 签名",
@@ -32,7 +32,7 @@ export const tools: Tool[] = [
     title: "Alpha Vantage API",
     description: "使用 Alpha Vantage API 獲取股票數據",
     icon: "💹",
-    category: "開發工具",
+    category: "投資工具",
     features: [
       "獲取股票價格",
       "獲取期權數據",
