@@ -3,71 +3,38 @@ import React, { useState } from 'react';
 import { Layout, Search, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
+import { tools } from '@/config/tools';
+import { categories } from '@/config/categories';
 
-const ToolDashboard = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("全部");
-  const router = useRouter();
+interface Tool {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  icon: string;
+  hidden?: boolean;
+}
 
-  const categories = [
-    "全部",
-    "資料處理",
-    "安全工具",
-    "多媒體",
-    "開發工具",
-    "實用工具"
-  ];
-
-  const tools = [
-    {
-      id: "firebase-login",
-      title: "Firebase 登入",
-      description: "透過 Firebase 進行使用者驗證",
-      icon: "🔑",
-      category: "安全工具",
-      features: [
-        "Google 登入",
-        "Email 密碼登入",
-        "驗證狀態管理"
-      ],
-      hidden: false,
-    },
-    {
-      id: "jwt-generator",
-      title: "Apple JWS 產生器",
-      description: "產生並簽署 JSON Web Signature (JWS)",
-      icon: "📝",
-      category: "安全工具",
-      features: [
-        "支援 PEM 檔案匯入",
-        "支持 ECDSA 签名",
-        "自動生成 JWS"
-      ],
-      hidden: false,
-    },
-    {
-      id: "alpha-vantage",
-      title: "Alpha Vantage API",
-      description: "使用 Alpha Vantage API 獲取股票數據",
-      icon: "💹",
-      category: "開發工具",
-      features: [
-        "獲取股票價格",
-        "獲取期權數據",
-        "即時市場資訊"
-      ],
-      hidden: false,
-    }
-  ];
-
-  // 搜索和分類過濾
-  const filteredTools = tools.filter(tool => {
+const useToolsFilter = (
+  tools: Tool[], 
+  searchTerm: string, 
+  selectedCategory: string
+): Tool[] => {
+  return tools.filter(tool => {
     const matchesSearch = tool.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       tool.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "全部" || tool.category === selectedCategory;
     const isVisible = !tool.hidden;
     return matchesSearch && matchesCategory && isVisible;
   });
+};
+
+const ToolDashboard = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("全部");
+  const router = useRouter();
+
+  const filteredTools = useToolsFilter(tools, searchTerm, selectedCategory);
 
   return (
     <div className="min-h-screen bg-gray-50">
