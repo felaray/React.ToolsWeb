@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { Layout, Search, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
-import { tools } from '@/config/tools';
-import { categories } from '@/config/categories';
+import { tools,categories } from '@/config/tools';
+
 
 interface Tool {
   id: string;
@@ -69,8 +69,10 @@ const ToolDashboard = () => {
             )}
           </div>
 
+
+
           <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
+            {categories().map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}

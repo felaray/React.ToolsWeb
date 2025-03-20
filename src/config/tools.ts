@@ -40,5 +40,9 @@ export const tools: Tool[] = [
     ],
     hidden: false,
   }
-  // ...existing tools...
 ];
+
+export const categories = (): string[] => {
+  const uniqueCategories = new Set(tools.map(tool => tool.category));
+  return ["全部", ...Array.from(uniqueCategories)];
+};
