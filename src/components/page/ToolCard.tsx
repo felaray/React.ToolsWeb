@@ -1,12 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-interface Tool {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  category: string;
-}
+import { Tool } from '@/types/tool';
 
 const ToolCard = ({ tool, onClick }: { tool: Tool, onClick: () => void }) => (
   <Card 
