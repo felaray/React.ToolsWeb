@@ -16,7 +16,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-TW" suppressHydrationWarning>
-      <head />
+      <head>
+        {/* 預載入主要工具組件 */}
+        <link 
+          rel="preload" 
+          href="/tool/firebase-login" 
+          as="fetch" 
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={inter.className}>
         {children}
       </body>
