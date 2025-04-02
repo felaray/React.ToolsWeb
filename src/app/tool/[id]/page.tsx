@@ -9,6 +9,7 @@ const components = {
   'firebase-login': lazy(() => import('@/components/tools/firebase-login')),
   'jwt-generator': lazy(() => import('@/components/tools/apple-jwt-maker')),
   'alpha-vantage': lazy(() => import('@/components/tools/alpha-vantage')),
+  'tdee-calculator': lazy(() => import('@/components/tools/tdee-calculator')),
 };
 
 const tools = {
@@ -26,6 +27,11 @@ const tools = {
     title: 'Alpha Vantage API',
     description: '使用 Alpha Vantage API 獲取股票數據',
     icon: '💹',
+  },
+  'tdee-calculator': {
+    title: 'TDEE計算器',
+    description: '計算基礎代謝率(BMR)和每日總熱量消耗(TDEE)',
+    icon: '🔢',
   },
 };
 
