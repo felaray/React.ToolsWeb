@@ -35,6 +35,14 @@ const calculateAge = (birthDate: string): number => {
   return age;
 };
 
+const defaultValues: TDEEFormData = {
+  gender: "male",
+  birthDate: "1990-01-01",
+  weight: 60,
+  height: 165,
+  activityLevel: "sedentary"
+};
+
 export default function TDEECalculator() {
   const [formData, setFormData] = useState<TDEEFormData>({
     gender: "male",
@@ -75,6 +83,22 @@ export default function TDEECalculator() {
       ...prev,
       [field]: field === 'gender' || field === 'activityLevel' ? value : value
     }));
+  };
+
+  const loadDefaultValues = () => {
+    setFormData(defaultValues);
+    setResults(null);
+  };
+
+  const clearForm = () => {
+    setFormData({
+      gender: "male",
+      birthDate: "",
+      weight: 0,
+      height: 0,
+      activityLevel: "sedentary"
+    });
+    setResults(null);
   };
 
   return (
@@ -152,7 +176,15 @@ export default function TDEECalculator() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full">計算</Button>
+          <div className="flex gap-2">
+            <Button type="submit" className="flex-1">計算</Button>
+            <Button type="button" variant="outline" onClick={loadDefaultValues} className="flex-1">
+              載入預設值
+            </Button>
+            <Button type="button" variant="outline" onClick={clearForm} className="flex-1">
+              清空
+            </Button>
+          </div>
 
           {results && (
             <div className="mt-6 space-y-4">
