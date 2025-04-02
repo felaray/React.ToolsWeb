@@ -1,25 +1,28 @@
 "use client";
+import React, { Suspense, lazy } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import FirebaseLogin from '@/components/tools/firebase-login';
-import AppleJWSGenerator from '@/components/tools/apple-jwt-maker';
-import AlphaVantage from '@/components/tools/alpha-vantage';
+import { LoadingSpinner } from '@/components/page/LoadingSpinner';
+
+// 動態載入元件
+const components = {
+  'firebase-login': lazy(() => import('@/components/tools/firebase-login')),
+  'jwt-generator': lazy(() => import('@/components/tools/apple-jwt-maker')),
+  'alpha-vantage': lazy(() => import('@/components/tools/alpha-vantage')),
+};
 
 const tools = {
   'firebase-login': {
-    component: FirebaseLogin,
     title: 'Firebase 登入',
     description: '透過 Firebase 進行使用者驗證',
     icon: '🔑',
   },
   'jwt-generator': {
-    component: AppleJWSGenerator,
     title: 'Apple JWS 產生器',
     description: '產生並簽署 JSON Web Signature (JWS)',
     icon: '📝',
   },
   'alpha-vantage': {
-    component: AlphaVantage,
     title: 'Alpha Vantage API',
     description: '使用 Alpha Vantage API 獲取股票數據',
     icon: '💹',
@@ -48,7 +51,7 @@ export default function ToolPage() {
     );
   }
 
-  const ToolComponent = tool.component;
+  const ToolComponent = components[toolId as keyof typeof components];
 
   return (
     <div className="container mx-auto px-6 py-8">
@@ -68,7 +71,9 @@ export default function ToolPage() {
         <p className="text-gray-600">{tool.description}</p>
       </div>
 
-      <ToolComponent />
+      <Suspense fallback={<LoadingSpinner />}>
+        <ToolComponent />
+      </Suspense>
     </div>
   );
 }
